@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { API_KEY } from "react-native-dotenv";
 import moment from 'moment';
@@ -44,7 +44,12 @@ const App = () => {
             textMonthFontWeight: '400',
           }}
           />
-        <Button color='#078080' title={`Click Here to Find NEOs for ${dayCalendar}`} onPress={fetchNeos} />
+        <TouchableOpacity onPress={fetchNeos}>
+          <View style={styles.button}>
+            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '400' }}>Find NEOs for {dayCalendar}</Text>
+          </View>
+        </TouchableOpacity>
+
         {loading && 
           <ActivityIndicator style={styles.spinner} size='large' />
         }
@@ -119,5 +124,12 @@ const styles = StyleSheet.create({
   desc: {
     color: '#232323',
     fontSize: 16
+  },
+  button: {
+    backgroundColor: '#078080',
+      alignItems: 'center', 
+      justifyContent: 'center',
+      borderRadius: 10,
+      height: 40,
   }
 });
