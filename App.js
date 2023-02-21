@@ -18,8 +18,8 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   
   const fetchNeos = (date) => {
-    setDateSubmittedToApi(date);
     setLoading(true);
+    setDateSubmittedToApi(date);
     fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=${API_KEY}`)
     .then(r => r.json())
     .then(r => { 
@@ -28,8 +28,8 @@ const App = () => {
     })
   }
 
-  const dayFetchNoHyphens = dateSubmittedToApi.split('-').join('');
-  let b = moment(dayFetchNoHyphens, 'YYYYMMDD');
+  const removeHyphensFromDate = dateSubmittedToApi.split('-').join('');
+  const b = moment(removeHyphensFromDate, 'YYYYMMDD');
   const dateForResults = b.format("MMM Do YYYY");
   
   return (
@@ -53,7 +53,6 @@ const App = () => {
             todayTextColor: '#f45d48',
           }}
           />
-
         {loading && 
           <ActivityIndicator style={styles.spinner} size='large' color='#f45d48' />
         }
@@ -69,7 +68,7 @@ const App = () => {
                 <Text style={styles.desc}>Approximate diameter: {Math.round(neo.estimated_diameter.feet.estimated_diameter_min)} ft to {Math.round(neo.estimated_diameter.feet.estimated_diameter_max)} ft</Text>
                 <Text style={styles.desc}>Relative velocity: {Math.round(neo.close_approach_data[0].relative_velocity.miles_per_hour)} mph</Text>
                 <Text style={styles.desc}>Miss distance: {Math.round(neo.close_approach_data[0].miss_distance.miles)} miles</Text>
-                <Text style={styles.desc}>Potentially hazardous? {neo.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
+                <Text style={styles.desc}>Potentially hazardous? {neo.is_potentially_hazardous_asteroid ? 'Yes' : 'No'}</Text>
               </View>
             );
           })
@@ -107,19 +106,18 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   cardContainer: {
-    marginTop: 15,
+    marginTop: 12,
   },
   calendar: {
     marginBottom: 15,
   },
   neoTitle: {
-    marginTop: 14,
     textAlign: 'center',
     fontSize: 20,
     color: '#232323',
   },
   spinner: {
-    marginTop: 12,
+    marginTop: 8,
     marginBottom: 8,
     padding: 5,
   },
