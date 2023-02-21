@@ -3,11 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { API_KEY } from "react-native-dotenv";
+import moment from 'moment';
 
 const App = () => {
 
-  const todayDateString = new Date().toISOString().split('T')[0];  
-
+  const todayDateString = moment().format("YYYY-MM-DD");
+    
   const [day, setDay] = useState(todayDateString);
   const [neos, setNeos] = useState([]);
   
@@ -18,25 +19,29 @@ const App = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View>
       <StatusBar style="auto" />
       <ScrollView>
-        <Text style={styles.text}>Near Earth Object Finder</Text>
-        <Calendar onDayPress={day => setDay(day.dateString)} />
-        <Button color='#db2020' title={`Find NEOs for ${day}`} onPress={fetchNeos} />
+      <View style={styles.container}>
+        <Text style={styles.text}>Near-Earth Object Finder</Text>
+        <Calendar style={styles.calendar} onDayPress={day => setDay(day.dateString)} />
+        <Button color='#db2020' title={`Click Here to Find NEOs for ${day}`} onPress={fetchNeos} />
+        <View style={styles.cardContainer}>
         {neos && 
           neos.map(item => {
             return (
-              <View key={item.id}>
-                <Text>Name: {item.name}</Text>
-                <Text>Approximate Diameter in Feet: {item.estimated_diameter.feet.estimated_diameter_min} to {item.estimated_diameter.feet.estimated_diameter_max}</Text>
-                <Text>Relative Velocity in mph: {item.close_approach_data[0].relative_velocity.miles_per_hour}</Text>
-                <Text>Miss distance in miles: {item.close_approach_data[0].miss_distance.miles}</Text>
-                <Text>Potentially Hazardous? {item.is_potentially_hazardous_asteroid.toString()}</Text>
+              <View style={styles.card} key={item.id}>
+                <Text>{item.name}</Text>
+                <Text>Approximate diameter: {Math.round(item.estimated_diameter.feet.estimated_diameter_min)} ft to {Math.round(item.estimated_diameter.feet.estimated_diameter_max)} ft</Text>
+                <Text>Relative velocity: {Math.round(item.close_approach_data[0].relative_velocity.miles_per_hour)} mph</Text>
+                <Text>Miss distance: {Math.round(item.close_approach_data[0].miss_distance.miles)} miles</Text>
+                <Text>Potentially Hazardous? {item.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
               </View>
             );
           })
         }
+        </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -53,5 +58,21 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: 20,
+  },
+  card: {
+    marginBottom: 15,
+    borderColor: '#bacdd8',
+    backgroundColor: '#bacdd8',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingLeft: 6,
+    paddingTop: 4,
+    paddingBottom: 4
+  },
+  cardContainer: {
+    marginTop: 15
+  },
+  calendar: {
+    marginBottom: 15
   }
 });
