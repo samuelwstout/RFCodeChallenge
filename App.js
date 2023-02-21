@@ -1,37 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { API_KEY } from "react-native-dotenv";
 import moment from 'moment';
 
 const App = () => {
 
-  const todayDateString = moment().format("YYYY-MM-DD");
+  const todaysDateString = moment().format("YYYY-MM-DD");
 
-  const [dayCalendar, setDayCalendar] = useState(todayDateString);
-  const [dayFetch, setDayFetch] = useState('');
+  useEffect(() => {
+    fetchNeos(todaysDateString);
+  }, [])
+
+  const [dateSubmittedToApi, setDateSubmittedToApi] = useState(todaysDateString);
   const [neos, setNeos] = useState([]);
   const [loading, setLoading] = useState(false);
   
-  const fetchNeos = () => {
+  const fetchNeos = (date) => {
+    setDateSubmittedToApi(date);
     setLoading(true);
-    fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${dayCalendar}&end_date=${dayCalendar}&api_key=${API_KEY}`)
+    fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=${API_KEY}`)
     .then(r => r.json())
-    .then(data => { 
-      setNeos(data['near_earth_objects'][dayCalendar]);
-      setDayFetch(dayCalendar);
+    .then(r => { 
+      setNeos(r['near_earth_objects'][date]);
       setLoading(false);
     })
   }
 
-  const dayCalendarNoHyphens = dayCalendar.split('-').join('');
-  let a = moment(dayCalendarNoHyphens, 'YYYYMMDD');
-  const dayCalendarForButton = a.format("MMM Do YYYY");
-
-  const dayFetchNoHyphens = dayFetch.split('-').join('');
+  const dayFetchNoHyphens = dateSubmittedToApi.split('-').join('');
   let b = moment(dayFetchNoHyphens, 'YYYYMMDD');
-  const dayFetchForResults = b.format("MMM Do YYYY");
+  const dateForResults = b.format("MMM Do YYYY");
   
   return (
     <View style={styles.background}>
@@ -40,9 +39,10 @@ const App = () => {
       <View style={styles.container}>
         <Text style={styles.text}>Near-Earth Object Finder</Text>
         <Calendar 
-          style={styles.calendar} 
-          onDayPress={day => setDayCalendar(day.dateString)} 
-          markedDates={{ [dayCalendar]: {selected: true, selectedColor: '#078080'}}}
+          style={styles.calendar}
+          initialDate={todaysDateString}
+          onDayPress={day => fetchNeos(day.dateString)} 
+          markedDates={{ [dateSubmittedToApi]: {selected: true, selectedColor: '#078080'}}}
           theme={{
             backgroundColor: '#fffffe',
             calendarBackground: '#fffffe',
@@ -53,28 +53,23 @@ const App = () => {
             todayTextColor: '#f45d48',
           }}
           />
-        <TouchableOpacity onPress={fetchNeos}>
-          <View style={styles.button}>
-            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '315' }}>Find NEOs for {dayCalendarForButton}</Text>
-          </View>
-        </TouchableOpacity>
 
         {loading && 
           <ActivityIndicator style={styles.spinner} size='large' color='#f45d48' />
         }
-        {neos.length !== 0 && 
-          <Text style={styles.neoTitle}>NEOs for {dayFetchForResults}:</Text>
+        {!loading && 
+          <Text style={styles.neoTitle}>NEOs for {dateForResults}:</Text>
         }
         <View style={styles.cardContainer}>
-        {
-          neos.map(item => {
+        {!loading &&
+          neos.map(neo => {
             return (
-              <View style={styles.card} key={item.id}>
-                <Text style={styles.name}>{item.name}</Text>
-                <Text style={styles.desc}>Approximate diameter: {Math.round(item.estimated_diameter.feet.estimated_diameter_min)} ft to {Math.round(item.estimated_diameter.feet.estimated_diameter_max)} ft</Text>
-                <Text style={styles.desc}>Relative velocity: {Math.round(item.close_approach_data[0].relative_velocity.miles_per_hour)} mph</Text>
-                <Text style={styles.desc}>Miss distance: {Math.round(item.close_approach_data[0].miss_distance.miles)} miles</Text>
-                <Text style={styles.desc}>Potentially hazardous? {item.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
+              <View style={styles.card} key={neo.id}>
+                <Text style={styles.name}>{neo.name}</Text>
+                <Text style={styles.desc}>Approximate diameter: {Math.round(neo.estimated_diameter.feet.estimated_diameter_min)} ft to {Math.round(neo.estimated_diameter.feet.estimated_diameter_max)} ft</Text>
+                <Text style={styles.desc}>Relative velocity: {Math.round(neo.close_approach_data[0].relative_velocity.miles_per_hour)} mph</Text>
+                <Text style={styles.desc}>Miss distance: {Math.round(neo.close_approach_data[0].miss_distance.miles)} miles</Text>
+                <Text style={styles.desc}>Potentially hazardous? {neo.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
               </View>
             );
           })
