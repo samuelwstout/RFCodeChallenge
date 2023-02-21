@@ -25,6 +25,14 @@ const App = () => {
     })
   }
 
+  const dayCalendarNoHyphens = dayCalendar.split('-').join('');
+  let a = moment(dayCalendarNoHyphens, 'YYYYMMDD');
+  const dayCalendarForButton = a.format("MMM Do, YYYY");
+
+  const dayFetchNoHyphens = dayFetch.split('-').join('');
+  let b = moment(dayFetchNoHyphens, 'YYYYMMDD');
+  const dayFetchForResults = b.format("MMM Do, YYYY");
+  
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
@@ -47,15 +55,15 @@ const App = () => {
           />
         <TouchableOpacity onPress={fetchNeos}>
           <View style={styles.button}>
-            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '315' }}>Find NEOs for {dayCalendar}</Text>
+            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '315' }}>Find NEOs for {dayCalendarForButton}</Text>
           </View>
         </TouchableOpacity>
 
         {loading && 
-          <ActivityIndicator style={styles.spinner} size='large' />
+          <ActivityIndicator style={styles.spinner} size='large' color='#f45d48' />
         }
         {neos.length !== 0 && 
-          <Text style={styles.neoTitle}>NEOs for {dayFetch}:</Text>
+          <Text style={styles.neoTitle}>NEOs for {dayFetchForResults}:</Text>
         }
         <View style={styles.cardContainer}>
         {
@@ -110,7 +118,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   neoTitle: {
-    marginTop: 24,
+    marginTop: 14,
     textAlign: 'center',
     fontSize: 20,
     color: '#232323',
