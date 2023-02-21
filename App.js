@@ -42,11 +42,12 @@ const App = () => {
             textSectionTitleColor: '#232323',
             monthTextColor: '#232323',
             textMonthFontWeight: '400',
+            todayTextColor: '#f45d48',
           }}
           />
         <TouchableOpacity onPress={fetchNeos}>
           <View style={styles.button}>
-            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '400' }}>Find NEOs for {dayCalendar}</Text>
+            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '300' }}>Find NEOs for {dayCalendar}</Text>
           </View>
         </TouchableOpacity>
 
