@@ -27,11 +27,11 @@ const App = () => {
 
   const dayCalendarNoHyphens = dayCalendar.split('-').join('');
   let a = moment(dayCalendarNoHyphens, 'YYYYMMDD');
-  const dayCalendarForButton = a.format("MMM Do, YYYY");
+  const dayCalendarForButton = a.format("MMM Do YYYY");
 
   const dayFetchNoHyphens = dayFetch.split('-').join('');
   let b = moment(dayFetchNoHyphens, 'YYYYMMDD');
-  const dayFetchForResults = b.format("MMM Do, YYYY");
+  const dayFetchForResults = b.format("MMM Do YYYY");
   
   return (
     <View style={styles.background}>
@@ -74,7 +74,7 @@ const App = () => {
                 <Text style={styles.desc}>Approximate diameter: {Math.round(item.estimated_diameter.feet.estimated_diameter_min)} ft to {Math.round(item.estimated_diameter.feet.estimated_diameter_max)} ft</Text>
                 <Text style={styles.desc}>Relative velocity: {Math.round(item.close_approach_data[0].relative_velocity.miles_per_hour)} mph</Text>
                 <Text style={styles.desc}>Miss distance: {Math.round(item.close_approach_data[0].miss_distance.miles)} miles</Text>
-                <Text style={styles.desc}>Potentially Hazardous? {item.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
+                <Text style={styles.desc}>Potentially hazardous? {item.is_potentially_hazardous_asteroid === true ? 'Yes' : 'No'}</Text>
               </View>
             );
           })
