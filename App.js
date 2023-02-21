@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { API_KEY } from "react-native-dotenv";
 import moment from 'moment';
@@ -47,7 +47,7 @@ const App = () => {
           />
         <TouchableOpacity onPress={fetchNeos}>
           <View style={styles.button}>
-            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '300' }}>Find NEOs for {dayCalendar}</Text>
+            <Text style={{ color: '#232323', fontSize: 20, fontWeight: '315' }}>Find NEOs for {dayCalendar}</Text>
           </View>
         </TouchableOpacity>
 
@@ -55,7 +55,7 @@ const App = () => {
           <ActivityIndicator style={styles.spinner} size='large' />
         }
         {neos.length !== 0 && 
-          <Text style={styles.neoTitle}>NEOs for {dayFetch}</Text>
+          <Text style={styles.neoTitle}>NEOs for {dayFetch}:</Text>
         }
         <View style={styles.cardContainer}>
         {
@@ -82,23 +82,25 @@ export default App;
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: '#fffffe'
+    backgroundColor: '#fffffe',
   },  
   container: {
     flex: 1,
     padding: 25,
-    marginTop: 22,
+    marginTop: 8,
   },
   text: {
     textAlign: 'center',
     fontSize: 20,
-    color: '#232323'
+    color: '#232323',
+    marginBottom: 5,
   },
   card: {
     marginBottom: 15,
     borderColor: '#f8f5f2',
     backgroundColor: '#f8f5f2',
     borderWidth: 1,
+    borderRadius: 7,
     padding: 10,
   },
   cardContainer: {
@@ -108,29 +110,30 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   neoTitle: {
-    marginTop: 8,
+    marginTop: 24,
     textAlign: 'center',
     fontSize: 20,
-    color: '#094067'
+    color: '#232323',
   },
   spinner: {
-    marginTop: 8,
-    marginBottom: 8
+    marginTop: 12,
+    marginBottom: 8,
+    padding: 5,
   },
   name: {
     color: '#232323',
     fontSize: 20,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   desc: {
     color: '#232323',
-    fontSize: 16
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#078080',
       alignItems: 'center', 
       justifyContent: 'center',
-      borderRadius: 10,
+      borderRadius: 7,
       height: 40,
   }
 });
