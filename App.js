@@ -16,6 +16,7 @@ const App = () => {
   const [dateSubmittedToApi, setDateSubmittedToApi] = useState(todaysDateString);
   const [neos, setNeos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   const fetchNeos = (date) => {
     setLoading(true);
@@ -25,6 +26,9 @@ const App = () => {
     .then(r => { 
       setNeos(r['near_earth_objects'][date]);
       setLoading(false);
+    })
+    .catch((error) => {
+      setErrorMessage(error);
     })
   }
 
@@ -58,6 +62,9 @@ const App = () => {
         }
         {!loading && 
           <Text style={styles.neoTitle}>NEOs for {dateForResults}:</Text>
+        }
+        {errorMessage !== '' && 
+          <Text style={styles.neoTitle}>{errorMessage}</Text>
         }
         <View style={styles.cardContainer}>
         {!loading &&
